@@ -13,6 +13,4 @@ int main(){
 //Create 2 lists 
 //      - List 1 stores the argument from keyboard and send it over to the other socket
 //      - List 2 stores recieves the data and prints it on the screen
-
-
 }
