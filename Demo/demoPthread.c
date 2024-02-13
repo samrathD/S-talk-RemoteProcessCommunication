@@ -33,6 +33,5 @@ int main(int argc, char**args){
 
     pthread_join(threadPID,NULL);
     pthread_join(threadPID2,NULL);
-    print("Hello\n");
 
 }
