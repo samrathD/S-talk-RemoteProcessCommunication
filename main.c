@@ -61,7 +61,9 @@ int main(){
 
     List*list1 = List_create();
     pthread_mutex_t mutex_1 = PTHREAD_MUTEX_INITIALIZER;
-    printf("Starting program.....\n Enter a message - \n");
+    printf("Starting program.....\n 
+    Press '!' to quit \n 
+    Enter a message - \n");
 
     keyboard_input(list1,mutex_1);
 
