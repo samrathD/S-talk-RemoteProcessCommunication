@@ -1,5 +1,5 @@
 #include "Socket.h"
-
+#include "keyboard.h"
 //First create a function that creates a socket
 
 //Create a function that that takes the keyboard argument - Keyboard
@@ -57,4 +57,16 @@ int main(){
 //Shutdown and free list
 //      - shutdown all the threads and sockets
 //      - free the lists
+
+
+    List*list1 = List_create();
+    pthread_mutex_t mutex_1 = PTHREAD_MUTEX_INITIALIZER;
+    printf("Starting program.....\n Enter a message - \n");
+
+    keyboard_input(list1,mutex_1);
+
+    //Testing to print the entered message
+
+    // printf("A new message %s\n",List_trim(list1));
+
 }
