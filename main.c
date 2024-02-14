@@ -12,8 +12,5 @@
 int main(){
 //Create 2 lists 
 //      - List 1 stores the argument from keyboard and send it over to the other socket
-    printf("Hello world!\n");
-    printf("Updating main\n");
-    printf("add 1\n");
 //      - List 2 stores recieves the data and prints it on the screen
 }
