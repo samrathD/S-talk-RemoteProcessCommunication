@@ -64,19 +64,28 @@ int main(){
     pthread_mutex_t mutex_1 = PTHREAD_MUTEX_INITIALIZER;
     printf("Starting program.....\n Press '!' to quit \n Enter a message - \n");
 
-    keyboard_input(list1, &mutex_1); 
+    //Creating a pthread for keyboard input
+    keyboard_createThread(list1,mutex_1);
 
     // yo sam if ur reading this to run it u do ./main and then ! to cancel the keyboard input,  
     // then open another terminal and do netcat -u 127.0.0.1 22110 and it should work without errors
 
     pthread_t threadPID;
     pthread_create(&threadPID, NULL, receiveThread, NULL);
+
+    
+    //Joining the threads
+    keyboard_joinThread();
+
+
+
     //user input: 
-    char x; scanf("%c", &x);
-    pthread_cancel(threadPID);
-    pthread_join(threadPID, NULL);
+    // char x; 
+    // scanf("%c", &x);
+    // pthread_cancel(threadPID);
+    // pthread_join(threadPID, NULL);
     
     //Testing to print the entered message
 
-    printf("A new message %s\n",List_trim(list1));
+    // printf("A new message %s\n",List_trim(list1));
 }

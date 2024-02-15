@@ -1,6 +1,10 @@
 #include "keyboard.h"
 
-void* keyboard_input(List* list1, pthread_mutex_t* mutex){
+static List* inputList;
+static pthread_mutex_t keyMutex;
+static pthread_t keyThread;
+
+void* keyboard_input(){
 
     while(1){
         char input[1024];
@@ -10,7 +14,8 @@ void* keyboard_input(List* list1, pthread_mutex_t* mutex){
         //Checking if the user wants to end the program
         if(strcmp(input,"!\n")==0){
             printf("You have ended the program!\n");
-            return;
+            pthread_cancel(keyThread);
+            return -1;
         }
 
         //Otherwise storing user input in a list
@@ -21,13 +26,23 @@ void* keyboard_input(List* list1, pthread_mutex_t* mutex){
                 return -1;
             }
             strcpy(newMsg, input);
-            //lock the mutext
-            pthread_mutex_lock(&mutex);
+            //lock the mutex
+            pthread_mutex_lock(&keyMutex);
             {
-                List_append(list1,newMsg);
+                List_append(inputList,newMsg);
                 printf("The message is - %s", newMsg);
             }
-            pthread_mutex_unlock(&mutex);
+            pthread_mutex_unlock(&keyMutex);
         }
     }
+}
+
+void* keyboard_createThread(List* list1, pthread_mutex_t mutex){
+    inputList = list1;
+    keyMutex = mutex;
+    pthread_create(&keyThread,NULL,keyboard_input,NULL);
+}
+
+void* keyboard_joinThread(){
+    pthread_join(keyThread,NULL);
 }

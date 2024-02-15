@@ -4,7 +4,14 @@
 #define MSG_MAX_LEN 1024 // Replacable
 
 static int socketDescriptor = -1;
+static List* receiveList;
+static pthread_mutex_t receiveMutex;
 
+static pthread_t receiveThread;
+
+int my_port;
+
+//Pass port numbers
 void* receiveThread(void* unused) {
     // address
     struct sockaddr_in sin;
@@ -26,4 +33,23 @@ void* receiveThread(void* unused) {
 
         printf("message received: %s\n", messageRx);
     }
+}
+
+void* receive_createThread(List* list2, char* port, pthread_mutex_t mutex){
+    List* receiveList = list2;
+    receiveMutex = mutex;
+
+    //convert port from string to integer
+
+    //assign port to myport
+
+    //call pthread_create() 
+
+    
+}
+
+//Function to join the threads
+
+void* receive_joinThread(){
+    pthread_join(receiveThread,NULL);
 }
