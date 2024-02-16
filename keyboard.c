@@ -15,7 +15,7 @@ void* keyboard_input(){
         if(strcmp(input,"!\n")==0){
             printf("You have ended the program!\n");
             pthread_cancel(keyThread);
-            return -1;
+            exit(-1);
         }
 
         //Otherwise storing user input in a list
@@ -23,7 +23,8 @@ void* keyboard_input(){
             //Allocate memory for the string
             char* newMsg = malloc(sizeof(input)*sizeof(char) + 1); // null terminator
             if(newMsg == NULL){
-                return -1;
+                exit(-1);
+                
             }
             strcpy(newMsg, input);
             //lock the mutex

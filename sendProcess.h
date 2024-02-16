@@ -18,13 +18,13 @@ struct threadParameters {
     char* hostname;
     char* port;
     List* list;
-    pthread_mutex_t* s_mutex;
+    pthread_mutex_t s_mutex;
 };
 
 // Define a function to initialize the thread parameters
-struct threadParameters* create_sendThread(char* hostname, char* port, List* list, pthread_mutex_t* mutex);
+struct threadParameters* create_sendThread(char* hostname, char* port, List* list, pthread_mutex_t mutex);
 
 // Free the allocated memory for the thread parameters
 void freeParameters(struct threadParameters* par);
 
-void* send_joinThread();
+void* send_joinThread(pthread_t senderThread);

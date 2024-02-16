@@ -7,7 +7,7 @@ static int socketDescriptor = -1;
 static List* receiveList;
 static pthread_mutex_t receiveMutex;
 
-static pthread_t receiveThread;
+static pthread_t receiveID;
 
 int my_port;
 
@@ -43,7 +43,7 @@ void* receive_createThread(List* list2, char* port, pthread_mutex_t mutex){
 
     //assign port to myport
 
-    //call pthread_create() 
+    // pthread_create(&receiveID, NULL, receiveThread, NULL); 
 
     
 }
@@ -51,5 +51,5 @@ void* receive_createThread(List* list2, char* port, pthread_mutex_t mutex){
 //Function to join the threads
 
 void* receive_joinThread(){
-    pthread_join(receiveThread,NULL);
+    pthread_join(receiveID,NULL);
 }

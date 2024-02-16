@@ -2,7 +2,7 @@
 
 struct addrinfo *serverinfo;
 
-struct threadParameters* create_sendThread(char* hostname, char* port, List* list, pthread_mutex_t* mutex) {
+struct threadParameters* create_sendThread(char* hostname, char* port, List* list, pthread_mutex_t mutex) {
     struct threadParameters* par = (struct threadParameters*)malloc(sizeof(struct threadParameters));
     par->hostname = hostname;
     par->port = port;
@@ -72,6 +72,6 @@ void* send_process(void* arg) {
     return NULL;
 }
 
-void* send_joinThread(){
-    pthread_join(send_process,NULL);
+void* send_joinThread(pthread_t senderThread) {
+    pthread_join(senderThread, NULL);
 }

@@ -63,12 +63,12 @@ int main(){
 
     List*list1 = List_create();
     pthread_mutex_t mutex_1 = PTHREAD_MUTEX_INITIALIZER;
-    char* hostname = "";
-    char* port = "22110";
-    struct threadParameters* par = create_sendThread(hostname, port, List1, &mutex);
+    //char* hostname = "127.0.0.1";
+    //char* port = "22110";
+    //struct threadParameters* par = create_sendThread(hostname, port, list1, mutex_1);
 
-    pthread_t senderThread;
-    pthread_create(&senderThread, NULL, send_process, (void*) par);
+    //pthread_t senderThread;
+    //pthread_create(&senderThread, NULL, send_process, (void*) par);
 
 
     printf("Starting program.....\n Press '!' to quit \n Enter a message - \n");
@@ -76,12 +76,12 @@ int main(){
     //Creating a pthread for keyboard input
     keyboard_createThread(list1,mutex_1);
 
-    pthread_t threadPID;
+    pthread_t threadPID; 
     pthread_create(&threadPID, NULL, receiveThread, NULL);
 
-    //Joining the threads
+    //Joining the threads 
     keyboard_joinThread();
-    send_joinThread();
+    //send_joinThread(senderThread);
 
 
 
