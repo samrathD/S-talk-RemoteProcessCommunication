@@ -79,19 +79,9 @@ int main(){
     pthread_t threadPID; 
     pthread_create(&threadPID, NULL, receiveThread, NULL);
 
-    //Joining the threads 
+    //Joining the threads  
     keyboard_joinThread();
     //send_joinThread(senderThread);
 
 
-
-    //user input: 
-    // char x; 
-    // scanf("%c", &x);
-    // pthread_cancel(threadPID);
-    // pthread_join(threadPID, NULL);
-    
-    //Testing to print the entered message
-
-    // printf("A new message %s\n",List_trim(list1));
 }
