@@ -26,7 +26,7 @@ void* keyboard_input(){
                 exit(-1);
                 
             }
-            strcpy(newMsg, input);
+            strcpy(newMsg,input);
             //lock the mutex
             pthread_mutex_lock(&keyMutex);
             {

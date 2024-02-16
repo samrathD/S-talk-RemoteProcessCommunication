@@ -7,7 +7,7 @@
 #include <sys/types.h>
 #include "list.h"
 
-void* receiveThread(void* unused);
+void* receive_input(void* unused);
 
 void* receive_createThread(List* list2, char* port, pthread_mutex_t mutex);
 
