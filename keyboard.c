@@ -10,7 +10,7 @@ void* keyboard_input(List*list1, pthread_mutex_t mutex){
         //Checking if the user wants to end the program
         if(strcmp(input,"!\n")==0){
             printf("You have ended the program!\n");
-            return;
+            return -1;
         }
 
         //Otherwise storing user input in a list
