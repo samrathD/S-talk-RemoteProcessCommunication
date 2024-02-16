@@ -1,5 +1,7 @@
 #include "Socket.h"
 #include "keyboard.h"
+#include"receiveProcess.h"
+#include "sendProcess.h"
 //First create a function that creates a socket
 
 //Create a function that that takes the keyboard argument - Keyboard
@@ -60,7 +62,9 @@ int main(){
 
 
     List*list1 = List_create();
+    List*list2 = List_create();
     pthread_mutex_t mutex_1 = PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_t mutex_2 = PTHREAD_MUTEX_INITIALIZER;
     //char* hostname = "127.0.0.1";
     //char* port = "22110";
     //struct threadParameters* par = create_sendThread(hostname, port, list1, mutex_1);
@@ -71,8 +75,25 @@ int main(){
 
     printf("Starting program.....\n Press '!' to quit \n Enter a message - \n");
 
-    keyboard_input(list1,mutex_1);
+    //Creating a pthread for keyboard input
+    keyboard_createThread(list1,mutex_1);
+    receive_createThread(list2,"22110",mutex_2);
+    // pthread_t threadPID; 
+    // pthread_create(&threadPID, NULL, receive_input, NULL);
 
+    //Joining the threads 
+    keyboard_joinThread();
+    receive_joinThread();
+    //send_joinThread(senderThread);
+
+
+
+    //user input: 
+    // char x; 
+    // scanf("%c", &x);
+    // pthread_cancel(threadPID);
+    // pthread_join(threadPID, NULL);
+    
     //Testing to print the entered message
 
     // printf("A new message %s\n",List_trim(list1));

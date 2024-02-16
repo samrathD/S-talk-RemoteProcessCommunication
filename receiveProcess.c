@@ -7,12 +7,12 @@ static int socketDescriptor = -1;
 static List* receiveList;
 static pthread_mutex_t receiveMutex;
 
-static pthread_t receiveID;
+static pthread_t receiveThread;
 
 int my_port;
 
 //Pass port numbers
-void* receiveThread(void* unused) {
+void* receive_input(void* unused) {
     // address
     struct sockaddr_in sin;
     memset(&sin, 0, sizeof(sin));
@@ -29,27 +29,39 @@ void* receiveThread(void* unused) {
         char messageRx[MSG_MAX_LEN];
 
         memset(messageRx, 0, sizeof(messageRx));
-        recvfrom(socketDescriptor, messageRx, MSG_MAX_LEN, 0, (struct sockaddr*) &sinRemote, &sin_len);
-
+        int bytesRx = recvfrom(socketDescriptor, messageRx, MSG_MAX_LEN, 0, 
+                                (struct sockaddr*) &sinRemote, &sin_len);
+        //Null terminated(string)
+        int terminatedIdx = (bytesRx< MSG_MAX_LEN)? bytesRx:MSG_MAX_LEN - 1;
+        messageRx[terminatedIdx] = 0;
+        // char* inputMessage = malloc(sizeof(char)*(bytesRx+1));
+        // strcpy(inputMessage,messageRx);
+        
+        //Lock Mutex
+        pthread_mutex_lock(&receiveMutex);
+        {
+            List_append(receiveList,messageRx);
+        }
+        pthread_mutex_unlock(&receiveMutex);
         printf("message received: %s\n", messageRx);
+
     }
 }
 
 void* receive_createThread(List* list2, char* port, pthread_mutex_t mutex){
-    List* receiveList = list2;
+    receiveList = list2;
+
     receiveMutex = mutex;
 
     //convert port from string to integer
-
     //assign port to myport
+    my_port = atoi(port);
 
-    // pthread_create(&receiveID, NULL, receiveThread, NULL); 
+    pthread_create(&receiveThread, NULL, receive_input, NULL); 
 
-    
 }
 
 //Function to join the threads
-
 void* receive_joinThread(){
-    pthread_join(receiveID,NULL);
+    pthread_join(receiveThread,NULL);
 }

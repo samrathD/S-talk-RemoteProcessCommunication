@@ -14,12 +14,8 @@ void* keyboard_input(){
         //Checking if the user wants to end the program
         if(strcmp(input,"!\n")==0){
             printf("You have ended the program!\n");
-<<<<<<< HEAD
-            return -1;
-=======
             pthread_cancel(keyThread);
             exit(-1);
->>>>>>> 872699cad80dd215f781548ee7693c5434e89099
         }
 
         //Otherwise storing user input in a list
@@ -30,7 +26,7 @@ void* keyboard_input(){
                 exit(-1);
                 
             }
-            strcpy(newMsg, input);
+            strcpy(newMsg,input);
             //lock the mutex
             pthread_mutex_lock(&keyMutex);
             {
