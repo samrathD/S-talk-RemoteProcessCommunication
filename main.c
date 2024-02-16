@@ -1,6 +1,7 @@
 #include "Socket.h"
 #include "keyboard.h"
 #include"receiveProcess.h"
+#include "sendProcess.h"
 //First create a function that creates a socket
 
 //Create a function that that takes the keyboard argument - Keyboard
@@ -62,20 +63,25 @@ int main(){
 
     List*list1 = List_create();
     pthread_mutex_t mutex_1 = PTHREAD_MUTEX_INITIALIZER;
+    char* hostname = "";
+    char* port = "22110";
+    struct threadParameters* par = create_sendThread(hostname, port, List1, &mutex);
+
+    pthread_t senderThread;
+    pthread_create(&senderThread, NULL, send_process, (void*) par);
+
+
     printf("Starting program.....\n Press '!' to quit \n Enter a message - \n");
 
     //Creating a pthread for keyboard input
     keyboard_createThread(list1,mutex_1);
 
-    // yo sam if ur reading this to run it u do ./main and then ! to cancel the keyboard input,  
-    // then open another terminal and do netcat -u 127.0.0.1 22110 and it should work without errors
-
     pthread_t threadPID;
     pthread_create(&threadPID, NULL, receiveThread, NULL);
 
-    
     //Joining the threads
     keyboard_joinThread();
+    send_joinThread();
 
 
 
