@@ -36,7 +36,6 @@ void* send_process(void* arg) {
 
         // Check for socket creation errors here
 
-        // You might want to bind the socket here as well
         bind(socketID, temp->ai_addr, temp->ai_addrlen);
     }
 
