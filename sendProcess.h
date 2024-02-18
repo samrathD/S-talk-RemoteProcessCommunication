@@ -11,16 +11,12 @@
 #include <pthread.h>
 #include "list.h"
 
-void* send_process(void* arg);
 
-// Define a struct to hold thread parameters
-// Define a struct to hold thread parameters
-struct threadParameters {
-    List* list;
-    pthread_mutex_t mutex;
-    int socket;
-    struct addrinfo *serverInfo;
-};
-void* send_createThread(List* listToSend, char* destIP, char* destPort, pthread_mutex_t mutex);
+void* send_input(void* arg);
+// Define a function to initialize the thread parameters
+void * send_createThread(char* host, int port, List* list2, pthread_mutex_t mutex);
+
+// Free the allocated memory for the thread parameters
+//void* freeParameters(struct threadParameters* par);
 
 void* send_joinThread();

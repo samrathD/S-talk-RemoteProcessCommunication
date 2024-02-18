@@ -11,10 +11,6 @@
 
 //Create a function that prints the data on the screen
 
-
- 
-//*******************
-int main(){
 //Create 2 lists 
 //      - List 1 stores the argument from keyboard and send it over to the other socket
 //      - List 2 stores recieves the data and prints it on the screen
@@ -26,6 +22,7 @@ int main(){
 //Initialize sockets
 //       - One for list 1
 //       - One for list 2
+
 
 
 //Keyboard 
@@ -61,23 +58,80 @@ int main(){
 //      - shutdown all the threads and sockets
 //      - free the lists
 
+//*******************
+int main(int argc, char**args){
+    if(argc!=4){
+        printf("%d\n",argc);
+        printf("%s\n",args[0]);
+        printf("Please provide local port number, remote IP and remote port number\n");
+        exit(EXIT_FAILURE);
+    }
+    if(strcmp(args[0],"s-talk")){
+        printf("Please type the correct command\n");
+        exit(EXIT_FAILURE);
+    }
 
+    int myport = atoi(args[1]);
+    char *remoteIP = args[2];
+    int remotePort = atoi(args[3]);
+
+    //Creating lists
     List*list1 = List_create();
     List*list2 = List_create();
     pthread_mutex_t mutex_1 = PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_t mutex_2 = PTHREAD_MUTEX_INITIALIZER;
 
+    //char* hostname = "127.0.0.1";
+    // int myport = 22110;
+
     printf("Starting program.....\n Press '!' to quit \n Enter a message - \n");
 
-    //Creating a pthread for keyboard input
-    keyboard_createThread(list1,mutex_1); 
-    receive_createThread(list2,"22110",mutex_2);
-    send_createThread(list1,"127.0.0.1","22110",mutex_1);
-    print_createThread(list2, mutex_2);
+    //Storing the information of the port that I am talking to 
+    struct sockaddr_in sockAddr;
+    memset(&sockAddr,0,sizeof(sockAddr));
+    sockAddr.sin_family = AF_INET;
+    sockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    sockAddr.sin_port = htons(myport);
+    
+    //Create a soket to be used by both the sender and the receiver
+    int socketDescriptor = socket(PF_INET,SOCK_DGRAM,0);
 
-    //Joining the threads  
+    if(socketDescriptor == -1){
+        printf("OPPS! Cannot create a socket!\n");
+    }
+
+    //Bind the socket
+    if(bind(socketDescriptor,(struct sockaddr*)&sockAddr,sizeof(sockAddr))!=0){
+        printf("Cannot bind the socket");
+        close(socketDescriptor);
+        return -1;
+    }
+
+
+    //Creating a pthread for keyboard input
+    keyboard_createThread(list1,mutex_1);
+    receive_createThread(list2,myport,socketDescriptor,mutex_2);
+    send_createThread(remoteIP,remotePort,list1,mutex_1);
+    print_createThread(list2,mutex_2);
+
+
+
+    //Joining the threads 
     keyboard_joinThread();
     receive_joinThread();
     send_joinThread();
     print_joinThread();
+    //send_joinThread(senderThread);
+
+
+
+    //user input: 
+    // char x; 
+    // scanf("%c", &x);
+    // pthread_cancel(threadPID);
+    // pthread_join(threadPID, NULL);
+    
+    //Testing to print the entered message
+
+    // printf("A new message %s\n",List_trim(list1));
 }
