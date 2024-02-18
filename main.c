@@ -1,4 +1,3 @@
-#include "Socket.h"
 #include "keyboard.h"
 #include"receiveProcess.h"
 #include "sendProcess.h"
@@ -16,7 +15,7 @@
 //      - List 2 stores recieves the data and prints it on the screen
 
 // Create 2 mutex 
-//       - One for list 1
+//       - One for list 1 
 //       - One for list 2
 
 //Initialize sockets
@@ -80,6 +79,7 @@ int main(int argc, char**args){
     List*list2 = List_create();
     pthread_mutex_t mutex_1 = PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_t mutex_2 = PTHREAD_MUTEX_INITIALIZER;
+    pthread_cond_t sendCondition = PTHREAD_COND_INITIALIZER;
 
     //char* hostname = "127.0.0.1";
     // int myport = 22110;
@@ -93,11 +93,11 @@ int main(int argc, char**args){
     sockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
     sockAddr.sin_port = htons(myport);
     
-    //Create a soket to be used by both the sender and the receiver
+    //Create a socket to be used by both the sender and the receiver
     int socketDescriptor = socket(PF_INET,SOCK_DGRAM,0);
 
     if(socketDescriptor == -1){
-        printf("OPPS! Cannot create a socket!\n");
+        printf("OOPS! Cannot create a socket!\n");
     }
 
     //Bind the socket
@@ -111,7 +111,7 @@ int main(int argc, char**args){
     //Creating a pthread for keyboard input
     keyboard_createThread(list1,mutex_1);
     receive_createThread(list2,myport,socketDescriptor,mutex_2);
-    send_createThread(remoteIP,remotePort,list1,mutex_1);
+    send_createThread(remoteIP,remotePort,list1,mutex_1,sendCondition);
     print_createThread(list2,mutex_2);
 
 
@@ -121,17 +121,4 @@ int main(int argc, char**args){
     receive_joinThread();
     send_joinThread();
     print_joinThread();
-    //send_joinThread(senderThread);
-
-
-
-    //user input: 
-    // char x; 
-    // scanf("%c", &x);
-    // pthread_cancel(threadPID);
-    // pthread_join(threadPID, NULL);
-    
-    //Testing to print the entered message
-
-    // printf("A new message %s\n",List_trim(list1));
 }
