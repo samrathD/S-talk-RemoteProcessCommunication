@@ -27,6 +27,7 @@ int main(int argCount, char** args){
     char messageRx[MSG_MAX_LEN];
     //Recieving the data
     while(1 && strcmp(messageRx,"!\n")!=0){
+        /*
         struct sockaddr_in sinRemote;
         unsigned int sin_len = sizeof(sinRemote);
         // char messageRx[MSG_MAX_LEN];
@@ -49,7 +50,7 @@ int main(int argCount, char** args){
 
         //Send Reply
         sin_len = sizeof(sinRemote);
-        sendto(socketDescriptor,messageTx,strlen(messageTx),0,(struct sockaddr*)&sinRemote,sin_len);
+        sendto(socketDescriptor,messageTx,strlen(messageTx),0,(struct sockaddr*)&sinRemote,sin_len);*/
 
     }
     close(socketDescriptor);
