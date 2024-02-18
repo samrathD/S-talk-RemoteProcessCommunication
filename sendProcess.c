@@ -1,76 +1,63 @@
 #include "sendProcess.h"
 
-struct addrinfo *serverinfo;
-
-struct threadParameters* create_sendThread(char* hostname, char* port, List* list, pthread_mutex_t mutex) {
-    struct threadParameters* par = (struct threadParameters*)malloc(sizeof(struct threadParameters));
-    par->hostname = hostname;
-    par->port = port;
-    par->list = list;
-    par->s_mutex = mutex;
-    return par;
-}
-
-// Free the allocated memory for the thread parameters
-void freeParameters(struct threadParameters* par) {
-    free(par);
-}
+static pthread_t sendThread;
 
 void* send_process(void* arg) {
     struct threadParameters* par = (struct threadParameters*)arg;
-
-    struct addrinfo info, *p;
-    int getAddr;
-    int numbytes;
-
-    memset(&info, 0, sizeof(info));
-    info.ai_family = AF_INET;
-    info.ai_socktype = SOCK_DGRAM;
-
-    getAddr = getaddrinfo(par->hostname, par->port, &info, &p);
-
-    // Create and bind socket
-    int socketID = -1;
-    for (struct addrinfo* temp = p; temp != NULL; temp = temp->ai_next) {
-        socketID = socket(temp->ai_family, temp->ai_socktype, temp->ai_protocol);
-
-        // Check for socket creation errors here
-
-        bind(socketID, temp->ai_addr, temp->ai_addrlen);
-    }
+    
+    List* list = par->list; // list
+    pthread_mutex_t mutex = par->mutex; // mutex
+    int UDPsocket = par->socket; // in main we make socket from port and address
+    struct addrinfo *serverInfo = par->serverInfo; // 
 
     // Loop for sending
     while (1) {
-        int count = 0;
-        do {
-            count++;
-            char* message;
-            pthread_mutex_lock(&par->s_mutex);
-            {
-                message = List_trim(par->list);
-            }
-            pthread_mutex_unlock(&par->s_mutex);
+        pthread_mutex_lock(&mutex);
 
-            // send
-            numbytes = sendto(socketID, message, strlen(message), 0, p->ai_addr, p->ai_addrlen);
+        if (List_count(list)> 0){
+            char* data = List_first(list);
 
-            if (!strcmp(message, "!\n") && count == 1) {
-                free(message);
-                message = NULL;
-                return NULL;
-            }
+            int sendDest = sendto(UDPsocket, data, strlen(data), 0, serverInfo->ai_addr, serverInfo->ai_addrlen);
 
-            // De-allocating message
-            free(message);
-            message = NULL;
+            if (sendDest == -1){
+                exit(-1);
+            }   
+            if (strcmp(data, "!\n") == 0){
+                pthread_mutex_unlock(&mutex);
+                break;
+            }  
 
-        } while (List_count(par->list) != 0);
+            List_remove(list);   
+        }
+    pthread_mutex_unlock(&mutex);
     }
-
-    // close the socket here if needed
     return NULL;
 }
 
-void* send_joinThread(pthread_t senderThread) {
-    pthread_join(senderThread, NULL);
+void* send_createThread(List* list, char* destIP, char* destPort, pthread_mutex_t mutex) {
+    
+    // sending sockets
+    struct addrinfo hints, *serverInfo;
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_INET; // ipv4
+    hints.ai_socktype = SOCK_DGRAM; // udp
+    getaddrinfo(destIP, destPort, &hints, &serverInfo);
+    int UDPsocket = socket(serverInfo->ai_family, serverInfo->ai_socktype, serverInfo->ai_protocol);
+    
+    struct threadParameters par;
+    par.list = list;
+    par.mutex = mutex;
+    par.socket = UDPsocket;
+    par.serverInfo = serverInfo;
+
+    // Create the send thread with error check
+    if (pthread_create(&sendThread, NULL, send_process, (void*)&par) != 0) {
+        perror("send_createThread: pthread_create error");
+        // Handle error, maybe exit or return
+        return NULL;
+    }
+}
+
+void* send_joinThread() {
+    pthread_join(sendThread, NULL);
 }

@@ -14,17 +14,13 @@
 void* send_process(void* arg);
 
 // Define a struct to hold thread parameters
+// Define a struct to hold thread parameters
 struct threadParameters {
-    char* hostname;
-    char* port;
     List* list;
-    pthread_mutex_t s_mutex;
+    pthread_mutex_t mutex;
+    int socket;
+    struct addrinfo *serverInfo;
 };
+void* send_createThread(List* listToSend, char* destIP, char* destPort, pthread_mutex_t mutex);
 
-// Define a function to initialize the thread parameters
-struct threadParameters* create_sendThread(char* hostname, char* port, List* list, pthread_mutex_t mutex);
-
-// Free the allocated memory for the thread parameters
-void freeParameters(struct threadParameters* par);
-
-void* send_joinThread(pthread_t senderThread);
+void* send_joinThread();
