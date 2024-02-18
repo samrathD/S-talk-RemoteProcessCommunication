@@ -80,6 +80,7 @@ int main(int argc, char**args){
     pthread_mutex_t mutex_1 = PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_t mutex_2 = PTHREAD_MUTEX_INITIALIZER;
     pthread_cond_t sendCondition = PTHREAD_COND_INITIALIZER;
+    pthread_cond_t recvCondition = PTHREAD_COND_INITIALIZER;
 
     //char* hostname = "127.0.0.1";
     // int myport = 22110;
@@ -110,7 +111,7 @@ int main(int argc, char**args){
 
     //Creating a pthread for keyboard input
     keyboard_createThread(list1,mutex_1);
-    receive_createThread(list2,myport,socketDescriptor,mutex_2);
+    receive_createThread(list2,myport,socketDescriptor,mutex_2, recvCondition);
     send_createThread(remoteIP,remotePort,list1,mutex_1,sendCondition);
     print_createThread(list2,mutex_2);
 

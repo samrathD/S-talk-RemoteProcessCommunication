@@ -12,6 +12,8 @@ static int recvSocket;
 
 static int my_port;
 
+pthread_cond_t recvCondition;
+
 //Pass port numbers
 void* receive_input(void* unused) {
     while (1) {
@@ -37,9 +39,10 @@ void* receive_input(void* unused) {
     }
 }
 
-void* receive_createThread(List* list2, int port, int socket, pthread_mutex_t mutex){
+void* receive_createThread(List* list2, int port, int socket, pthread_mutex_t mutex, pthread_cond_t condition){
     receiveList = list2;
     receiveMutex = mutex;
+    recvCondition = condition;
     //convert port from string to integer
     //assign port to myport
     my_port = port;

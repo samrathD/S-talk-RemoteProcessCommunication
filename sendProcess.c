@@ -68,7 +68,6 @@ void * send_createThread(char* host, int port, List* list2, pthread_mutex_t mute
     sendMutex = mutex;
     sendCondition = condition;
 
-
     sprintf(theirPort,"%d",port);
     // theirPort = port;
     hostname = host;
