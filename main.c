@@ -2,6 +2,7 @@
 #include "keyboard.h"
 #include"receiveProcess.h"
 #include "sendProcess.h"
+#include "print.h"
 //First create a function that creates a socket
 
 //Create a function that that takes the keyboard argument - Keyboard
@@ -72,9 +73,11 @@ int main(){
     keyboard_createThread(list1,mutex_1); 
     receive_createThread(list2,"22110",mutex_2);
     send_createThread(list1,"127.0.0.1","22110",mutex_1);
+    print_createThread(list2, mutex_2);
 
     //Joining the threads  
     keyboard_joinThread();
     receive_joinThread();
     send_joinThread();
+    print_joinThread();
 }
