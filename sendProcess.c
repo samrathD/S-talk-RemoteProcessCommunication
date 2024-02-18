@@ -6,7 +6,7 @@
 struct addrinfo *serverinfo;
 
 static List* sendList;
-static pthread_mutex_t sendMutex;
+static pthread_mutex_t *sendMutex;
 
 static pthread_t sendThread;
 
@@ -16,16 +16,9 @@ static char* theirPort;
 
 static char*hostname;
 
-
-// Free the allocated memory for the thread parameters
-// void freeParameters(struct threadParameters* par) {
-//     free(par);
-// }
+pthread_cond_t *sendCondition;
 
 void* send_input(void* arg) {
-    // struct threadParameters* par = (struct threadParameters*)arg;
-
-    // struct addrinfo info, *p;
     struct addrinfo info,*p;
     int getAddr;
     int numbytes;
@@ -42,19 +35,21 @@ void* send_input(void* arg) {
         socketID = socket(temp->ai_family, temp->ai_socktype, temp->ai_protocol);
 
         // Check for socket creation errors here
-
+        
         // You might want to bind the socket here as well
         bind(socketID, temp->ai_addr, temp->ai_addrlen);
     }
     char* message;
     // Loop for sending
     while (1) {
-        pthread_mutex_lock(&sendMutex);
+        pthread_mutex_lock(sendMutex);
         {
+            pthread_cond_wait(sendCondition,sendMutex);
             List_first(sendList);
+            printf("Message Sent\n");
             message = List_remove(sendList);
         }
-        pthread_mutex_unlock(&sendMutex);
+        pthread_mutex_unlock(sendMutex);
 
         int count = 0;
         numbytes = sendto(socketID, message, strlen(message), 0, p->ai_addr, p->ai_addrlen);
@@ -67,44 +62,18 @@ void* send_input(void* arg) {
         message = NULL;
     }
 
-    //     do {
-    //         count++;
-    //         char* message;
-    //         pthread_mutex_lock(&par->s_mutex);
-    //         {
-    //             message = List_trim(par->list);
-    //         }
-    //         pthread_mutex_unlock(&par->s_mutex);
-
-    //         // send
-    //         numbytes = sendto(socketID, message, strlen(message), 0, p->ai_addr, p->ai_addrlen);
-
-    //         if (!strcmp(message, "!\n") && count == 1) {
-    //             free(message);
-    //             message = NULL;
-    //             return NULL;
-    //         }
-
-    //         // De-allocating message
-    //         free(message);
-    //         message = NULL;
-
-    //     } while (List_count(par->list) != 0);
-    // }
-
-    // close the socket here if needed
-
     return NULL;
 }
 
-void * send_createThread(char* host, int port, List* list2, pthread_mutex_t mutex){
+void * send_createThread(char* host, char* port, List* list2, pthread_mutex_t *mutex, pthread_cond_t *condition){
     sendList = list2;
     sendMutex = mutex;
+    sendCondition = condition;
 
-    sprintf(theirPort,"%d",port);
+    //sprintf(theirPort,"%d",port);
     // theirPort = port;
-    hostname = host;
 
+    hostname = host;
     pthread_create(&sendThread,NULL,send_input,NULL);
 
 

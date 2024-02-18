@@ -6,5 +6,6 @@
 #include "list.h"
 
 void* print_process();
-void* print_createThread(List* list, pthread_mutex_t mutex);
+void* print_createThread(List* list, pthread_mutex_t *mutex, pthread_cond_t *condition);
+void* send_signal();
 void* print_joinThread();
