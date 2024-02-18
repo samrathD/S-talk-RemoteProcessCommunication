@@ -31,7 +31,7 @@ void* keyboard_input(){
             pthread_mutex_lock(&keyMutex);
             {
                 List_append(inputList,newMsg);
-                printf("The message is - %s", newMsg);
+              //printf("The message is - %s", newMsg);
             }
             pthread_mutex_unlock(&keyMutex);
         }

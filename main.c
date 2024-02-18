@@ -66,10 +66,10 @@ int main(int argc, char**args){
         printf("Please provide local port number, remote IP and remote port number\n");
         exit(EXIT_FAILURE);
     }
-    if(strcmp(args[0],"s-talk")){
-        printf("Please type the correct command\n");
-        exit(EXIT_FAILURE);
-    }
+    // if(strcmp(args[0],"s-talk")){
+    //     printf("Please type the correct command\n");
+    //     exit(EXIT_FAILURE);
+    // }
 
     int myport = atoi(args[1]);
     char *remoteIP = args[2];
@@ -110,8 +110,10 @@ int main(int argc, char**args){
 
     //Creating a pthread for keyboard input
     keyboard_createThread(list1,mutex_1);
+    
     receive_createThread(list2,myport,socketDescriptor,mutex_2);
     send_createThread(remoteIP,remotePort,list1,mutex_1);
+   // printf("Hello\n");
     print_createThread(list2,mutex_2);
 
 
@@ -134,4 +136,5 @@ int main(int argc, char**args){
     //Testing to print the entered message
 
     // printf("A new message %s\n",List_trim(list1));
+    return 0;
 }
