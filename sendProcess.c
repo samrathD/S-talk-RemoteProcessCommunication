@@ -3,7 +3,7 @@
 #include <sys/socket.h>
 #include <netdb.h>
 
-struct addrinfo *serverinfo;
+struct addrinfo *serverhints;
 
 static List* sendList;
 static pthread_mutex_t *sendMutex;
@@ -19,26 +19,32 @@ static char*hostname;
 pthread_cond_t *sendCondition;
 
 void* send_input(void* arg) {
-    struct addrinfo info,*p;
+    struct addrinfo hints;
+    struct addrinfo *serverInfo;
     int getAddr;
     int numbytes;
 
-    memset(&info, 0, sizeof(info));
-    info.ai_family = PF_INET;
-    info.ai_socktype = SOCK_DGRAM;
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = PF_INET;
+    hints.ai_socktype = SOCK_DGRAM;
 
-    getAddr = getaddrinfo(hostname, theirPort, &info, &p);
+    if(getaddrinfo(hostname, theirPort, &hints, &serverInfo)!=0){
+        exit(-1);
+    }
+
 
     // Create and bind socket
-    int socketID = -1;
-    for (struct addrinfo* temp = p; temp != NULL; temp = temp->ai_next) {
-        socketID = socket(temp->ai_family, temp->ai_socktype, temp->ai_protocol);
+    // int socketID = -1;
+    // struct addrinfo* temp = serverInfo; 
+    // temp != NULL; 
+    // temp = temp->ai_next;
+    // socketID = socket(serverInfo->ai_family, serverInfo->ai_socktype, serverInfo->ai_protocol);
 
         // Check for socket creation errors here
-        
         // You might want to bind the socket here as well
-        bind(socketID, temp->ai_addr, temp->ai_addrlen);
-    }
+       
+       // bind(socketID, serverInfo->ai_addr, serverInfo->ai_addrlen);
+
     char* message;
     // Loop for sending
     while (1) {
@@ -52,7 +58,7 @@ void* send_input(void* arg) {
         pthread_mutex_unlock(sendMutex);
 
         int count = 0;
-        numbytes = sendto(socketID, message, strlen(message), 0, p->ai_addr, p->ai_addrlen);
+        numbytes = sendto(sendSocket, message, strlen(message), 0, serverInfo->ai_addr, serverInfo->ai_addrlen);
         if (!strcmp(message, "!\n") && count == 1) {
                 free(message);
                 message = NULL;
@@ -65,7 +71,7 @@ void* send_input(void* arg) {
     return NULL;
 }
 
-void * send_createThread(char* host, char* port, List* list2, pthread_mutex_t *mutex, pthread_cond_t *condition){
+void * send_createThread(char* host, char* port, int socket, List* list2, pthread_mutex_t *mutex, pthread_cond_t *condition){
     sendList = list2;
     sendMutex = mutex;
     sendCondition = condition;

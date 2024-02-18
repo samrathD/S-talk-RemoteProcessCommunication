@@ -14,7 +14,7 @@
 
 void* send_input(void* arg);
 // Define a function to initialize the thread parameters
-void * send_createThread(char* host, char* port, List* list2, pthread_mutex_t *mutex,pthread_cond_t *condition);
+void * send_createThread(char* host, char* port, int socket, List* list2, pthread_mutex_t *mutex,pthread_cond_t *condition);
 
 // Free the allocated memory for the thread parameters
 //void* freeParameters(struct threadParameters* par);

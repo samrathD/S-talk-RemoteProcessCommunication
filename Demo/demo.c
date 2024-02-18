@@ -3,7 +3,7 @@
 #include <netdb.h>
 #include <string.h>
 #include <unistd.h>
-
+#include "list.h"
 #define MSG_MAX_LEN 1024
 #define PORT 22110
 
@@ -27,14 +27,15 @@ int main(int argCount, char** args){
     char messageRx[MSG_MAX_LEN];
     //Recieving the data
     while(1 && strcmp(messageRx,"!\n")!=0){
-        /*
         struct sockaddr_in sinRemote;
         unsigned int sin_len = sizeof(sinRemote);
-        // char messageRx[MSG_MAX_LEN];
+        char messageRx[MSG_MAX_LEN];
+        memset(messageRx, 0, sizeof(messageRx));
         
-        int bytesRx = recvfrom(socketDescriptor,messageRx,
-        MSG_MAX_LEN,0,(struct sockaddr*)&sinRemote, &sin_len);
 
+        int bytesRx = recvfrom(socketDescriptor, messageRx, MSG_MAX_LEN, 0, 
+                                (struct sockaddr*) &sinRemote, &sin_len);
+        printf("Hello\n");                        
         //Null terminated(string)
         // int terminatedIdx = (bytesRx< MSG_MAX_LEN)? bytesRx:MSG_MAX_LEN - 1;
 
@@ -50,8 +51,8 @@ int main(int argCount, char** args){
 
         //Send Reply
         sin_len = sizeof(sinRemote);
-        sendto(socketDescriptor,messageTx,strlen(messageTx),0,(struct sockaddr*)&sinRemote,sin_len);*/
+        sendto(socketDescriptor,messageTx,strlen(messageTx),0,(struct sockaddr*)&sinRemote,sin_len);
 
     }
-    close(socketDescriptor);
+   // close(socketDescriptor);
 }
