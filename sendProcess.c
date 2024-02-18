@@ -24,7 +24,7 @@ void* send_input(void* arg) {
     int numbytes;
 
     memset(&info, 0, sizeof(info));
-    info.ai_family = AF_INET;
+    info.ai_family = PF_INET;
     info.ai_socktype = SOCK_DGRAM;
 
     getAddr = getaddrinfo(hostname, theirPort, &info, &p);

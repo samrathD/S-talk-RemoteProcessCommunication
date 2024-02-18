@@ -94,6 +94,8 @@ int main(int argc, char**args){
     sockAddr.sin_family = AF_INET;
     sockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
     sockAddr.sin_port = htons(myport);
+
+    struct addrinfo *recvInfo;
     
     //Create a socket to be used by both the sender and the receiver
     int socketDescriptor = socket(PF_INET,SOCK_DGRAM,0);
@@ -114,7 +116,6 @@ int main(int argc, char**args){
     keyboard_createThread(list1,&mutex_1,&sendCondition);
     receive_createThread(list2,myport,socketDescriptor,&mutex_2, &printCondition);
     send_createThread(remoteIP,remotePort,list1,&mutex_1,&sendCondition);
-
     print_createThread(list2,&mutex_2,&printCondition);
 
     //Joining the threads 
