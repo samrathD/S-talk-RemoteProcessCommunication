@@ -16,18 +16,21 @@ pthread_cond_t *printCondition;
 
 //Pass port numbers
 void* receive_input(void* unused) {
+    
     while (1) {
         struct sockaddr_in sinRemote;
         unsigned int sin_len = sizeof(sinRemote);
         char messageRx[MSG_MAX_LEN];
         memset(messageRx, 0, sizeof(messageRx));
+        
 
         int bytesRx = recvfrom(recvSocket, messageRx, MSG_MAX_LEN, 0, 
                                 (struct sockaddr*) &sinRemote, &sin_len);
+        printf("Hello\n");                        
         //Null terminated(string)
         int terminatedIdx = (bytesRx< MSG_MAX_LEN)? bytesRx:MSG_MAX_LEN - 1;
         messageRx[terminatedIdx] = 0;
-
+       
         //Lock Mutex
         pthread_mutex_lock(receiveMutex);
         {

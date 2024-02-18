@@ -114,7 +114,6 @@ int main(int argc, char**args){
     keyboard_createThread(list1,&mutex_1,&sendCondition);
     receive_createThread(list2,myport,socketDescriptor,&mutex_2, &printCondition);
     send_createThread(remoteIP,remotePort,list1,&mutex_1,&sendCondition);
-
     print_createThread(list2,&mutex_2,&printCondition);
 
     //Joining the threads 
