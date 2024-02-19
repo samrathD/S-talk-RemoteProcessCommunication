@@ -1,4 +1,5 @@
 #include "sendProcess.h"
+#include "threadcancel.h"
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
@@ -21,57 +22,44 @@ pthread_cond_t *sendCondition;
 void* send_input(void* arg) {
     struct addrinfo hints;
     struct addrinfo *serverInfo;
-    int getAddr;
     int numbytes;
 
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_DGRAM;
 
-    if(getaddrinfo(hostname, theirPort, &hints, &serverInfo)!=0){
-        exit(-1);
+    if (getaddrinfo(hostname, theirPort, &hints, &serverInfo) != 0) {
+        perror("getaddrinfo");
+        exit(EXIT_FAILURE);
     }
 
-
-    // Create and bind socket
-    // int socketID = -1;
-    // struct addrinfo* temp = serverInfo; 
-    // temp != NULL; 
-    // temp = temp->ai_next;
-   // int socketID = socket(serverInfo->ai_family, serverInfo->ai_socktype, serverInfo->ai_protocol);
-
-        // Check for socket creation errors here
-        // You might want to bind the socket here as well
-       
-       // bind(socketID, serverInfo->ai_addr, serverInfo->ai_addrlen);
-    //printf("Ai addr is %s");
     char* message;
     // Loop for sending
     while (1) {
         pthread_mutex_lock(sendMutex);
         {
-            pthread_cond_wait(sendCondition,sendMutex);
+            pthread_cond_wait(sendCondition, sendMutex);
             List_first(sendList);
             message = List_remove(sendList);
         }
         pthread_mutex_unlock(sendMutex);
 
-        int count = 0;
         numbytes = sendto(sendSocket, message, strlen(message), 0, serverInfo->ai_addr, serverInfo->ai_addrlen);
-        if(numbytes == 0){
-            printf("Message Sent\n");
+        if (!strcmp(message, "!\n")) {
+            free(message);
+            message = NULL;
+            freeaddrinfo(serverInfo);
+            return NULL;
         }
-        if (!strcmp(message, "!\n") && count == 1) {
-                free(message);
-                message = NULL;
-                return NULL;
-            }
         free(message);
         message = NULL;
     }
 
+    freeaddrinfo(serverInfo);
+
     return NULL;
 }
+
 
 void * send_createThread(char* host, char* port, int socket, List* list2, pthread_mutex_t *mutex, pthread_cond_t *condition){
     sendList = list2;
@@ -82,8 +70,7 @@ void * send_createThread(char* host, char* port, int socket, List* list2, pthrea
     theirPort = port;
     hostname = host;
     pthread_create(&sendThread,NULL,send_input,NULL);
-
-
+    sendCancelInit(sendThread);
 }
 
 void* send_joinThread() {

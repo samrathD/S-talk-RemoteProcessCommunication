@@ -1,4 +1,5 @@
 #include "print.h"
+#include "threadcancel.h"
 
 static List* outputList;
 static pthread_mutex_t *pMutex;
@@ -8,22 +9,16 @@ static pthread_cond_t *printCondition;
 void* print_process(){
     while (1) {
         pthread_mutex_lock(pMutex);
-       // if (List_count(outputList) > 0) {
-            pthread_cond_wait(printCondition,pMutex);
-            List_first(outputList);
-            char* outputMsg = List_remove(outputList);
-            // Output the message
-            printf("Output: %s", outputMsg);
-
-            //List_remove(outputList);
-
-           // free(outputMsg); // Free the memory allocated for the message
-       // }
-        //printf("Inside the lock\n");
+        pthread_cond_wait(printCondition,pMutex);
+        List_first(outputList);
+        char* outputMsg = List_remove(outputList);
+        if(strcmp(outputMsg,"!\n")==0){
+            exit(-1);
+        }
+        // Output the message
+        printf("Them: %s", outputMsg);
         pthread_mutex_unlock(pMutex);
     }
-
-   // return NULL;
 }
 
 void* print_createThread(List* list, pthread_mutex_t *mutex, pthread_cond_t *condition){
@@ -36,6 +31,7 @@ void* print_createThread(List* list, pthread_mutex_t *mutex, pthread_cond_t *con
         // Handle error, maybe exit or return
         return NULL;
     }
+    printCancelInit(printThread);
 }
 
 

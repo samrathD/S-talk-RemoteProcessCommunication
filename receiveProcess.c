@@ -1,4 +1,6 @@
 #include "receiveProcess.h"
+#include "threadcancel.h"
+
 
 #define MSG_MAX_LEN 1024 // Replacable
 
@@ -22,7 +24,7 @@ void* receive_input(void* unused) {
         
 
         int bytesRx = recvfrom(recvSocket, messageRx, MSG_MAX_LEN, 0, 
-                                (struct sockaddr*) &sinRemote, &sin_len);                      
+                                (struct sockaddr*) &sinRemote, &sin_len);
         //Null terminated(string)
         int terminatedIdx = (bytesRx< MSG_MAX_LEN)? bytesRx:MSG_MAX_LEN - 1;
         messageRx[terminatedIdx] = 0;
@@ -30,13 +32,20 @@ void* receive_input(void* unused) {
         //Lock Mutex
         pthread_mutex_lock(receiveMutex);
         {
-            printf("Message recieved\n");
-            List_append(receiveList,messageRx);
+            List_append(receiveList,strdup(messageRx));
             pthread_cond_signal(printCondition);
         }
         pthread_mutex_unlock(receiveMutex);
 
-        printf("message received: %s\n", messageRx);
+        if (strcmp(messageRx, "!\n") == 0){
+            fputs("\nThey ended the chat \n", stdout);
+
+            cancelKeyboard();
+            cancelSend();
+            cancelPrint();
+            cancelReceive();
+            exit(-1);
+        }
     }
 }
 
@@ -44,10 +53,9 @@ void* receive_createThread(List* list2, int socket, pthread_mutex_t* mutex, pthr
     receiveList = list2;
     receiveMutex = mutex;
     printCondition = condition;
-    //convert port from string to integer
-    //assign port to myport
     recvSocket = socket;
     pthread_create(&receiveThread, NULL, receive_input, NULL); 
+    receiveCancelInit(receiveThread);
 }
 
 //Function to join the threads

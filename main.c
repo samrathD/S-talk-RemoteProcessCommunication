@@ -2,13 +2,13 @@
 #include"receiveProcess.h"
 #include "sendProcess.h"
 #include "print.h"
-//First create a function that creates a socket
+//First create a function that creates a socket -
 
 //Create a function that that takes the keyboard argument - Keyboard
 
 //Create a function that send the data over to the other socket - Send
 
-//Create a function that prints the data on the screen
+//Create a function that prints the data on the screen - Print
 
 //Create 2 lists 
 //      - List 1 stores the argument from keyboard and send it over to the other socket
@@ -59,25 +59,20 @@
 
 //*******************
 int main(int argc, char**args){
-    // if(argc!=4){
-    //     printf("\n%d\n",argc);
-    //     printf("\n%s\n",args[0]);
-    //     printf("Please provide local port number, remote IP and remote port number\n");
-    //     exit(EXIT_FAILURE);
-    // }
-    // if(strcmp(args[0],"s-talk")){
-    //     printf("Please type the correct command\n");
-    //     exit(EXIT_FAILURE);
-    // }
+    if(argc!=4){
+        printf("%d\n",argc);
+        printf("%s\n",args[0]);
+        printf("Please provide local port number, remote IP and remote port number\n");
+        exit(EXIT_FAILURE);
+    }
 
-//     int myport = atoi(args[1]);
-//     char *remoteIP = args[2];
-//    // int remotePort = atoi(args[3]);
-//    char* remotePort = args[3];
+    int myport = atoi(args[1]);
+    char *remoteIP = args[2];
+    char* remotePort = args[3];
 
-    int myport = 22111;
-    char*remoteIP = "asb9838nu-e08";
-    char* remotePort = "22111";
+    // int myport = 22111;
+    // char*remoteIP = "asb9838nu-e08";
+    // char* remotePort = "22111";
     //Creating lists
     List*list1 = List_create();
     List*list2 = List_create();
@@ -85,9 +80,6 @@ int main(int argc, char**args){
     pthread_mutex_t mutex_2 = PTHREAD_MUTEX_INITIALIZER;
     pthread_cond_t sendCondition = PTHREAD_COND_INITIALIZER;
     pthread_cond_t printCondition = PTHREAD_COND_INITIALIZER;
-
-    //char* hostname = "127.0.0.1";
-    // int myport = 22110;
 
     printf("Starting program.....\n Press '!' to quit \n Enter a message - \n");
 

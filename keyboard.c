@@ -1,4 +1,5 @@
 #include "keyboard.h"
+#include "threadcancel.h"
 
 static List* inputList;
 static pthread_mutex_t *keyMutex;
@@ -11,13 +12,6 @@ void* keyboard_input(){
         char input[1024];
         //getting user response
         fgets(input,sizeof(input),stdin);
-
-        //Checking if the user wants to end the program
-        if(strcmp(input,"!\n")==0){
-            printf("You have ended the program!\n");
-            pthread_cancel(keyThread);
-            exit(-1);
-        }
 
         //Otherwise storing user input in a list
         if(strcmp(input,"\n")!=0){
@@ -39,6 +33,16 @@ void* keyboard_input(){
             }
             pthread_mutex_unlock(keyMutex);
         }
+        
+        //Checking if the user wants to end the program
+        if(strcmp(input,"!\n")==0){
+            printf("You have ended the program!\n");
+            cancelReceive();
+            cancelPrint();
+            cancelSend();
+            cancelKeyboard();
+            exit(-1);
+        }
     }
 }
 
@@ -47,6 +51,7 @@ void* keyboard_createThread(List* list1, pthread_mutex_t *mutex, pthread_cond_t 
     keyMutex = mutex;
     sendCondition = condition;
     pthread_create(&keyThread,NULL,keyboard_input,NULL);
+    keyCancelInit(keyThread);
 }
 
 void* keyboard_joinThread(){
