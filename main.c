@@ -2,6 +2,7 @@
 #include"receiveProcess.h"
 #include "sendProcess.h"
 #include "print.h"
+#include "threadcancel.h"
 //First create a function that creates a socket -
 
 //Create a function that that takes the keyboard argument - Keyboard
@@ -81,7 +82,7 @@ int main(int argc, char**args){
     pthread_cond_t sendCondition = PTHREAD_COND_INITIALIZER;
     pthread_cond_t printCondition = PTHREAD_COND_INITIALIZER;
 
-    printf("Starting program.....\n Press '!' to quit \n Enter a message - \n");
+    printf("Starting program.....\n Press '!' to quit \n Enter your message - \n");
 
     //Storing the information of the port that I am talking to 
     struct sockaddr_in sockAddr;
@@ -118,4 +119,11 @@ int main(int argc, char**args){
     receive_joinThread();
     send_joinThread();
     print_joinThread();
+
+    close(socketDescriptor);
+    
+    pthread_mutex_destroy(&mutex_1);
+    pthread_mutex_destroy(&mutex_2);
+    List_free(list1,NULL);
+    List_free(list2,NULL);
 }

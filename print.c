@@ -16,7 +16,7 @@ void* print_process(){
             exit(-1);
         }
         // Output the message
-        printf("Them: %s", outputMsg);
+        printf("THEM: %s", outputMsg);
         pthread_mutex_unlock(pMutex);
     }
 }

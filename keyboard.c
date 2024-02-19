@@ -19,7 +19,6 @@ void* keyboard_input(){
             char* newMsg = malloc(sizeof(input)*sizeof(char) + 1); // null terminator
             if(newMsg == NULL){
                 exit(-1);
-                
             }
             strcpy(newMsg,input);
             //lock the mutex
@@ -31,6 +30,7 @@ void* keyboard_input(){
 
               //printf("The message is - %s", newMsg);
             }
+            free(newMsg);
             pthread_mutex_unlock(keyMutex);
         }
         
