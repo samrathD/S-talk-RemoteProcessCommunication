@@ -30,7 +30,6 @@ void* keyboard_input(){
 
               //printf("The message is - %s", newMsg);
             }
-            free(newMsg);
             pthread_mutex_unlock(keyMutex);
         }
         

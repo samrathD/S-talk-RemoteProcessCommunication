@@ -51,7 +51,7 @@ void* send_input(void* arg) {
             freeaddrinfo(serverInfo);
             return NULL;
         }
-       // free(message);
+        free(message);
         message = NULL;
     }
 
