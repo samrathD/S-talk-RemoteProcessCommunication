@@ -1,4 +1,6 @@
 #include "receiveProcess.h"
+#include "threadcancel.h"
+
 
 #define MSG_MAX_LEN 1024 // Replacable
 
@@ -34,6 +36,14 @@ void* receive_input(void* unused) {
             pthread_cond_signal(printCondition);
         }
         pthread_mutex_unlock(receiveMutex);
+
+        if (strcmp(messageRx, "!\n") == 0){
+            fputs(" \n other person ended chat \n", stdout);
+
+            cancelKeyboard();
+            cancelSend();
+            exit(-1);
+        }
     }
 }
 

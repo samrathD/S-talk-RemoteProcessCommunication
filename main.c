@@ -2,7 +2,7 @@
 #include"receiveProcess.h"
 #include "sendProcess.h"
 #include "print.h"
-//First create a function that creates a socket - Main and receive
+//First create a function that creates a socket -
 
 //Create a function that that takes the keyboard argument - Keyboard
 

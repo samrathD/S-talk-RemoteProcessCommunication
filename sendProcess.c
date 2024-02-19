@@ -1,4 +1,5 @@
 #include "sendProcess.h"
+#include "threadcancel.h"
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
