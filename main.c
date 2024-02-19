@@ -70,9 +70,6 @@ int main(int argc, char**args){
     char *remoteIP = args[2];
     char* remotePort = args[3];
 
-    // int myport = 22111;
-    // char*remoteIP = "asb9838nu-e08";
-    // char* remotePort = "22111";
     //Creating lists
     List*list1 = List_create();
     List*list2 = List_create();
