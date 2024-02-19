@@ -59,22 +59,25 @@
 
 //*******************
 int main(int argc, char**args){
-    if(argc!=4){
-        printf("%d\n",argc);
-        printf("%s\n",args[0]);
-        printf("Please provide local port number, remote IP and remote port number\n");
-        exit(EXIT_FAILURE);
-    }
+    // if(argc!=4){
+    //     printf("\n%d\n",argc);
+    //     printf("\n%s\n",args[0]);
+    //     printf("Please provide local port number, remote IP and remote port number\n");
+    //     exit(EXIT_FAILURE);
+    // }
     // if(strcmp(args[0],"s-talk")){
     //     printf("Please type the correct command\n");
     //     exit(EXIT_FAILURE);
     // }
 
-    int myport = atoi(args[1]);
-    char *remoteIP = args[2];
-   // int remotePort = atoi(args[3]);
-   char* remotePort = args[3];
+//     int myport = atoi(args[1]);
+//     char *remoteIP = args[2];
+//    // int remotePort = atoi(args[3]);
+//    char* remotePort = args[3];
 
+    int myport = 22111;
+    char*remoteIP = "asb9838nu-e08";
+    char* remotePort = "22111";
     //Creating lists
     List*list1 = List_create();
     List*list2 = List_create();
@@ -94,9 +97,11 @@ int main(int argc, char**args){
     sockAddr.sin_family = AF_INET;
     sockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
     sockAddr.sin_port = htons(myport);
+
+    struct addrinfo *recvInfo;
     
     //Create a socket to be used by both the sender and the receiver
-    int socketDescriptor = socket(PF_INET,SOCK_DGRAM,0);
+    int socketDescriptor = socket(AF_INET,SOCK_DGRAM,0);
 
     if(socketDescriptor == -1){
         printf("OOPS! Cannot create a socket!\n");
@@ -112,7 +117,7 @@ int main(int argc, char**args){
 
     //Creating a pthread for keyboard input
     keyboard_createThread(list1,&mutex_1,&sendCondition);
-    receive_createThread(list2,myport,socketDescriptor,&mutex_2, &printCondition);
+    receive_createThread(list2,socketDescriptor,&mutex_2, &printCondition);
     send_createThread(remoteIP,remotePort, socketDescriptor,list1,&mutex_1,&sendCondition);
     print_createThread(list2,&mutex_2,&printCondition);
 

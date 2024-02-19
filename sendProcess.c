@@ -25,7 +25,7 @@ void* send_input(void* arg) {
     int numbytes;
 
     memset(&hints, 0, sizeof(hints));
-    hints.ai_family = PF_INET;
+    hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_DGRAM;
 
     if(getaddrinfo(hostname, theirPort, &hints, &serverInfo)!=0){
@@ -38,13 +38,13 @@ void* send_input(void* arg) {
     // struct addrinfo* temp = serverInfo; 
     // temp != NULL; 
     // temp = temp->ai_next;
-    // socketID = socket(serverInfo->ai_family, serverInfo->ai_socktype, serverInfo->ai_protocol);
+   // int socketID = socket(serverInfo->ai_family, serverInfo->ai_socktype, serverInfo->ai_protocol);
 
         // Check for socket creation errors here
         // You might want to bind the socket here as well
        
        // bind(socketID, serverInfo->ai_addr, serverInfo->ai_addrlen);
-
+    //printf("Ai addr is %s");
     char* message;
     // Loop for sending
     while (1) {
@@ -52,13 +52,15 @@ void* send_input(void* arg) {
         {
             pthread_cond_wait(sendCondition,sendMutex);
             List_first(sendList);
-            printf("Message Sent\n");
             message = List_remove(sendList);
         }
         pthread_mutex_unlock(sendMutex);
 
         int count = 0;
         numbytes = sendto(sendSocket, message, strlen(message), 0, serverInfo->ai_addr, serverInfo->ai_addrlen);
+        if(numbytes == 0){
+            printf("Message Sent\n");
+        }
         if (!strcmp(message, "!\n") && count == 1) {
                 free(message);
                 message = NULL;
@@ -77,8 +79,7 @@ void * send_createThread(char* host, char* port, int socket, List* list2, pthrea
     sendCondition = condition;
     sendSocket = socket;
     //sprintf(theirPort,"%d",port);
-    // theirPort = port;
-
+    theirPort = port;
     hostname = host;
     pthread_create(&sendThread,NULL,send_input,NULL);
 

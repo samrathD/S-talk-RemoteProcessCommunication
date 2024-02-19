@@ -1,6 +1,5 @@
 #include "receiveProcess.h"
 
-
 #define MSG_MAX_LEN 1024 // Replacable
 
 static List* receiveList;
@@ -9,8 +8,6 @@ static pthread_mutex_t *receiveMutex;
 static pthread_t receiveThread;
 
 static int recvSocket;
-
-static int my_port;
 
 pthread_cond_t *printCondition;
 
@@ -25,8 +22,7 @@ void* receive_input(void* unused) {
         
 
         int bytesRx = recvfrom(recvSocket, messageRx, MSG_MAX_LEN, 0, 
-                                (struct sockaddr*) &sinRemote, &sin_len);
-        printf("Hello\n");                        
+                                (struct sockaddr*) &sinRemote, &sin_len);                      
         //Null terminated(string)
         int terminatedIdx = (bytesRx< MSG_MAX_LEN)? bytesRx:MSG_MAX_LEN - 1;
         messageRx[terminatedIdx] = 0;
@@ -44,13 +40,12 @@ void* receive_input(void* unused) {
     }
 }
 
-void* receive_createThread(List* list2, int port, int socket, pthread_mutex_t* mutex, pthread_cond_t *condition){
+void* receive_createThread(List* list2, int socket, pthread_mutex_t* mutex, pthread_cond_t *condition){
     receiveList = list2;
     receiveMutex = mutex;
     printCondition = condition;
     //convert port from string to integer
     //assign port to myport
-    my_port = port;
     recvSocket = socket;
     pthread_create(&receiveThread, NULL, receive_input, NULL); 
 }

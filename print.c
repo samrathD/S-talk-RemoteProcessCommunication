@@ -17,7 +17,7 @@ void* print_process(){
 
             //List_remove(outputList);
 
-            free(outputMsg); // Free the memory allocated for the message
+           // free(outputMsg); // Free the memory allocated for the message
        // }
         //printf("Inside the lock\n");
         pthread_mutex_unlock(pMutex);

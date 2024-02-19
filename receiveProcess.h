@@ -9,6 +9,6 @@
 
 void* receive_input(void* unused);
 
-void* receive_createThread(List* list2, int port, int socket, pthread_mutex_t *mutex, pthread_cond_t *condition);
+void* receive_createThread(List* list2, int socket, pthread_mutex_t *mutex, pthread_cond_t *condition);
 
 void* receive_joinThread();
