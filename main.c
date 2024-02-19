@@ -65,15 +65,10 @@ int main(int argc, char**args){
         printf("Please provide local port number, remote IP and remote port number\n");
         exit(EXIT_FAILURE);
     }
-    // if(strcmp(args[0],"s-talk")){
-    //     printf("Please type the correct command\n");
-    //     exit(EXIT_FAILURE);
-    // }
 
     int myport = atoi(args[1]);
     char *remoteIP = args[2];
-   // int remotePort = atoi(args[3]);
-   char* remotePort = args[3];
+    char* remotePort = args[3];
 
     //Creating lists
     List*list1 = List_create();
@@ -82,9 +77,6 @@ int main(int argc, char**args){
     pthread_mutex_t mutex_2 = PTHREAD_MUTEX_INITIALIZER;
     pthread_cond_t sendCondition = PTHREAD_COND_INITIALIZER;
     pthread_cond_t printCondition = PTHREAD_COND_INITIALIZER;
-
-    //char* hostname = "127.0.0.1";
-    // int myport = 22110;
 
     printf("Starting program.....\n Press '!' to quit \n Enter a message - \n");
 
