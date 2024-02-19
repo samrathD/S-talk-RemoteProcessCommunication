@@ -1,6 +1,6 @@
 #include "receiveProcess.h"
 
-#define PORT 22110 // Replace
+
 #define MSG_MAX_LEN 1024 // Replacable
 
 static List* receiveList;

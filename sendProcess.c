@@ -75,7 +75,7 @@ void * send_createThread(char* host, char* port, int socket, List* list2, pthrea
     sendList = list2;
     sendMutex = mutex;
     sendCondition = condition;
-
+    sendSocket = socket;
     //sprintf(theirPort,"%d",port);
     // theirPort = port;
 
