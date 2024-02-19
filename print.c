@@ -8,18 +8,11 @@ static pthread_cond_t *printCondition;
 void* print_process(){
     while (1) {
         pthread_mutex_lock(pMutex);
-       // if (List_count(outputList) > 0) {
-            pthread_cond_wait(printCondition,pMutex);
-            List_first(outputList);
-            char* outputMsg = List_remove(outputList);
-            // Output the message
-            printf("Output: %s", outputMsg);
-
-            //List_remove(outputList);
-
-            free(outputMsg); // Free the memory allocated for the message
-       // }
-        //printf("Inside the lock\n");
+        pthread_cond_wait(printCondition,pMutex);
+        List_first(outputList);
+        char* outputMsg = List_remove(outputList);
+        // Output the message
+        printf("Output: %s", outputMsg);
         pthread_mutex_unlock(pMutex);
     }
 

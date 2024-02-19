@@ -2,13 +2,13 @@
 #include"receiveProcess.h"
 #include "sendProcess.h"
 #include "print.h"
-//First create a function that creates a socket
+//First create a function that creates a socket - Main and receive
 
 //Create a function that that takes the keyboard argument - Keyboard
 
 //Create a function that send the data over to the other socket - Send
 
-//Create a function that prints the data on the screen
+//Create a function that prints the data on the screen - Print
 
 //Create 2 lists 
 //      - List 1 stores the argument from keyboard and send it over to the other socket

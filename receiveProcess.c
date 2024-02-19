@@ -23,7 +23,6 @@ void* receive_input(void* unused) {
 
         int bytesRx = recvfrom(recvSocket, messageRx, MSG_MAX_LEN, 0, 
                                 (struct sockaddr*) &sinRemote, &sin_len);
-        printf("Hello\n");                        
         //Null terminated(string)
         int terminatedIdx = (bytesRx< MSG_MAX_LEN)? bytesRx:MSG_MAX_LEN - 1;
         messageRx[terminatedIdx] = 0;
@@ -31,7 +30,6 @@ void* receive_input(void* unused) {
         //Lock Mutex
         pthread_mutex_lock(receiveMutex);
         {
-            printf("Message recieved\n");
             List_append(receiveList,messageRx);
             pthread_cond_signal(printCondition);
         }
@@ -45,8 +43,6 @@ void* receive_createThread(List* list2, int socket, pthread_mutex_t* mutex, pthr
     receiveList = list2;
     receiveMutex = mutex;
     printCondition = condition;
-    //convert port from string to integer
-    //assign port to myport
     recvSocket = socket;
     pthread_create(&receiveThread, NULL, receive_input, NULL); 
 }

@@ -68,7 +68,7 @@ void * send_createThread(char* host, char* port, int socket, List* list2, pthrea
     sendSocket = socket;
 
     //sprintf(theirPort,"%d",port);
-    // theirPort = port;
+    theirPort = port;
 
     hostname = host;
     pthread_create(&sendThread,NULL,send_input,NULL);
