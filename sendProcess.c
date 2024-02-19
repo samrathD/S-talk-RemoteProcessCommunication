@@ -39,7 +39,6 @@ void* send_input(void* arg) {
         {
             pthread_cond_wait(sendCondition, sendMutex);
             List_first(sendList);
-            printf("Message Sent\n");
             message = List_remove(sendList);
         }
         pthread_mutex_unlock(sendMutex);

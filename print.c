@@ -15,8 +15,6 @@ void* print_process(){
         printf("Output: %s", outputMsg);
         pthread_mutex_unlock(pMutex);
     }
-
-   // return NULL;
 }
 
 void* print_createThread(List* list, pthread_mutex_t *mutex, pthread_cond_t *condition){

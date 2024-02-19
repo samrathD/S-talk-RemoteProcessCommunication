@@ -30,12 +30,10 @@ void* receive_input(void* unused) {
         //Lock Mutex
         pthread_mutex_lock(receiveMutex);
         {
-            List_append(receiveList,messageRx);
+            List_append(receiveList,strdup(messageRx));
             pthread_cond_signal(printCondition);
         }
         pthread_mutex_unlock(receiveMutex);
-
-        printf("message received: %s\n", messageRx);
     }
 }
 
