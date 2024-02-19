@@ -107,7 +107,6 @@ int main(int argc, char**args){
         return -1;
     }
 
-
     //Creating a pthread for keyboard input
     keyboard_createThread(list1,&mutex_1,&sendCondition);
     receive_createThread(list2,socketDescriptor,&mutex_2, &printCondition);
@@ -121,9 +120,8 @@ int main(int argc, char**args){
     print_joinThread();
 
     close(socketDescriptor);
-    
     pthread_mutex_destroy(&mutex_1);
     pthread_mutex_destroy(&mutex_2);
-    List_free(list1,NULL);
-    List_free(list2,NULL);
+    List_free(list1, NULL);
+    List_free(list2, NULL);
 }
