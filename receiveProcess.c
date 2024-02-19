@@ -1,6 +1,5 @@
 #include "receiveProcess.h"
 
-#define PORT 22110 // Replace
 #define MSG_MAX_LEN 1024 // Replacable
 
 static List* receiveList;
@@ -9,8 +8,6 @@ static pthread_mutex_t *receiveMutex;
 static pthread_t receiveThread;
 
 static int recvSocket;
-
-static int my_port;
 
 pthread_cond_t *printCondition;
 
@@ -44,13 +41,12 @@ void* receive_input(void* unused) {
     }
 }
 
-void* receive_createThread(List* list2, int port, int socket, pthread_mutex_t* mutex, pthread_cond_t *condition){
+void* receive_createThread(List* list2, int socket, pthread_mutex_t* mutex, pthread_cond_t *condition){
     receiveList = list2;
     receiveMutex = mutex;
     printCondition = condition;
     //convert port from string to integer
     //assign port to myport
-    my_port = port;
     recvSocket = socket;
     pthread_create(&receiveThread, NULL, receive_input, NULL); 
 }
