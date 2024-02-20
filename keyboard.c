@@ -18,7 +18,7 @@ void* keyboard_input(){
             //Allocate memory for the string
             char* newMsg = malloc(sizeof(input)*sizeof(char) + 1); // null terminator
             if(newMsg == NULL){
-                exit(-1);
+                break;;
                 
             }
             strcpy(newMsg,input);
@@ -40,8 +40,8 @@ void* keyboard_input(){
             cancelReceive();
             cancelPrint();
             cancelSend();
-            cancelKeyboard();
-            exit(-1);
+            cancelPrint();
+            break;
         }
     }
 }
