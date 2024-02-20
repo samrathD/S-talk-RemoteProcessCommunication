@@ -103,11 +103,23 @@ int main(int argc, char**args){
         close(socketDescriptor);
         return -1;
     }
+    struct addrinfo hints;
+    struct addrinfo *serverInfo;
+    int numbytes;
+
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_DGRAM;
+
+    if (getaddrinfo(remoteIP, remotePort, &hints, &serverInfo) != 0) {
+        perror("getaddrinfo");
+        exit(EXIT_FAILURE);
+    }
 
     //Creating a pthread for keyboard input
     keyboard_createThread(list1,&mutex_1,&sendCondition);
     receive_createThread(list2,socketDescriptor,&mutex_2, &printCondition);
-    send_createThread(remoteIP,remotePort, socketDescriptor,list1,&mutex_1,&sendCondition);
+    send_createThread(remoteIP,remotePort, socketDescriptor,list1,&mutex_1,&sendCondition,serverInfo);
     print_createThread(list2,&mutex_2,&printCondition);
 
     //Joining the threads 
@@ -119,6 +131,7 @@ int main(int argc, char**args){
 
    
     close(socketDescriptor);
+    freeaddrinfo(serverInfo);
     pthread_mutex_destroy(&mutex_1);
     pthread_mutex_destroy(&mutex_2);
     pthread_cond_destroy(&sendCondition);
