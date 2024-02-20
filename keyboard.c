@@ -29,7 +29,7 @@ void* keyboard_input(){
         
         //Checking if the user wants to end the program
         if(strcmp(input,"!\n")==0){
-            printf("You have ended the program!\n");
+            printf("You have ended the chat!\n");
             cancelReceive();
             cancelPrint();
             cancelSend();

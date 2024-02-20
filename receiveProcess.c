@@ -33,7 +33,7 @@ void* receive_input(void* unused) {
         pthread_mutex_unlock(receiveMutex);
 
         if (strcmp(messageRx, "!\n") == 0){
-            fputs("\nThey ended the chat \n", stdout);
+            fputs("\nThey ended the chat! \n", stdout);
 
             cancelKeyboard();
             cancelSend();
