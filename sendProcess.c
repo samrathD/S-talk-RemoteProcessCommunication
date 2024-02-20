@@ -46,10 +46,12 @@ void* send_input(void* arg) {
 
         numbytes = sendto(sendSocket, message, strlen(message), 0, serverInfo->ai_addr, serverInfo->ai_addrlen);
         if (strcmp(message, "!\n")==0) {
+           // free(message);
             message = NULL;
             freeaddrinfo(serverInfo);
             return NULL;
         }
+        free(message);
         message = NULL;
     }
     freeaddrinfo(serverInfo);

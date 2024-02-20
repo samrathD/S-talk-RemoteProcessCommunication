@@ -17,14 +17,16 @@ pthread_cond_t *printCondition;
 void* receive_input(void* unused) {
     
     while (1) {
-        struct sockaddr_in sinRemote;
-        unsigned int sin_len = sizeof(sinRemote);
+        //struct sockaddr_in sinRemote;
+       // unsigned int sin_len = sizeof(sinRemote);
         char messageRx[MSG_MAX_LEN];
-        memset(messageRx, 0, sizeof(messageRx));
+        //memset(messageRx, 0, sizeof(messageRx));
         
 
+        // int bytesRx = recvfrom(recvSocket, messageRx, MSG_MAX_LEN, 0, 
+        //                         (struct sockaddr*) &sinRemote, &sin_len);
         int bytesRx = recvfrom(recvSocket, messageRx, MSG_MAX_LEN, 0, 
-                                (struct sockaddr*) &sinRemote, &sin_len);
+                                NULL, NULL);
         //Null terminated(string)
         int terminatedIdx = (bytesRx< MSG_MAX_LEN)? bytesRx:MSG_MAX_LEN - 1;
         messageRx[terminatedIdx] = 0;
@@ -39,11 +41,13 @@ void* receive_input(void* unused) {
 
         if (strcmp(messageRx, "!\n") == 0){
             fputs("\nThey ended the chat \n", stdout);
-            cancelReceive();
-            cancelPrint();
+
+            
             cancelKeyboard();
             cancelSend();
-            break;
+            cancelPrint();
+            cancelReceive();
+            exit(-1);
         }
     }
 }

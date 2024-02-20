@@ -13,7 +13,7 @@ void* print_process(){
         List_first(outputList);
         char* outputMsg = List_remove(outputList);
         if(strcmp(outputMsg,"!\n")==0){
-            exit(-1);
+            break;
         }
         // Output the message
         printf("THEM: %s", outputMsg);
