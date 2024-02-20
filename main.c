@@ -124,7 +124,7 @@ int main(int argc, char**args){
 
     //Joining the threads 
     keyboard_joinThread();
-    receive_joinThread();
+    receive_joinThread(); 
     send_joinThread();
     print_joinThread();
 
