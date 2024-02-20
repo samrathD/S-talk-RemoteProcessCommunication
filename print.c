@@ -32,7 +32,7 @@ void* print_createThread(List* list, pthread_mutex_t *mutex, pthread_cond_t *con
         return NULL;
     }
     printCancelInit(printThread);
-}
+} 
 
 
 void* print_joinThread(){
