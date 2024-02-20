@@ -21,7 +21,6 @@ void* receive_input(void* unused) {
         
         int bytesRx = recvfrom(recvSocket, messageRx, MSG_MAX_LEN, 0, 
                                 NULL, NULL);
-        //Null terminated(string)
         int terminatedIdx = (bytesRx< MSG_MAX_LEN)? bytesRx:MSG_MAX_LEN - 1;
         messageRx[terminatedIdx] = 0;
        
