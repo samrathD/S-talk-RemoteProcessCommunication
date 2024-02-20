@@ -39,12 +39,11 @@ void* receive_input(void* unused) {
 
         if (strcmp(messageRx, "!\n") == 0){
             fputs("\nThey ended the chat \n", stdout);
-
             cancelReceive();
             cancelPrint();
             cancelKeyboard();
             cancelSend();
-            break;;
+            break;
         }
     }
 }

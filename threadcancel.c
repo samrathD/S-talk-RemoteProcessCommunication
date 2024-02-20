@@ -2,6 +2,8 @@
 
 static pthread_t keyThread, printThread, receiveThread, sendThread;
 
+struct addrinfo* serverInfo;
+
 void keyCancelInit(pthread_t thread){
     keyThread = thread;
 }
