@@ -34,7 +34,7 @@ void* receive_input(void* unused) {
         //Lock Mutex
         pthread_mutex_lock(receiveMutex);
         {
-            List_append(receiveList,strdup(messageRx));
+            List_append(receiveList,messageRx);
             pthread_cond_signal(printCondition);
         }
         pthread_mutex_unlock(receiveMutex);
@@ -42,7 +42,7 @@ void* receive_input(void* unused) {
         if (strcmp(messageRx, "!\n") == 0){
             fputs("\nThey ended the chat \n", stdout);
 
-            
+
             cancelKeyboard();
             cancelSend();
             cancelPrint();
