@@ -45,13 +45,13 @@ void* send_input(void* arg) {
         pthread_mutex_unlock(sendMutex);
 
         numbytes = sendto(sendSocket, message, strlen(message), 0, serverInfo->ai_addr, serverInfo->ai_addrlen);
-        if (!strcmp(message, "!\n")) {
+        if (strcmp(message, "!\n")==0) {
            // free(message);
             message = NULL;
             freeaddrinfo(serverInfo);
             return NULL;
         }
-        free(message);
+       // free(message);
         message = NULL;
     }
 
