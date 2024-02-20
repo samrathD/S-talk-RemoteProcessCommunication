@@ -17,21 +17,12 @@ void* keyboard_input(){
 
         //Otherwise storing user input in a list
         if(strcmp(input,"\n")!=0){
-            //Allocate memory for the string
-            //char* newMsg = malloc(sizeof(input)*sizeof(char) + 1); // null terminator
-            // if(newMsg == NULL){
-            //     exit(-1);
-            // }
-            //strcpy(newMsg,input);
             //lock the mutex
             pthread_mutex_lock(keyMutex);
             {
                 List_append(inputList,input);
                 //Signal send to resume working 
                 pthread_cond_signal(sendCondition);
-                //free(newMsg);
-
-              //printf("The message is - %s", newMsg);
             }
             pthread_mutex_unlock(keyMutex);
         }
@@ -43,17 +34,15 @@ void* keyboard_input(){
             cancelPrint();
             cancelSend();
             cancelKeyboard();
-           // printf("Hello this is keyboard\n");
             break;
-            //exit(-1);
         }
     }
 }
 
-void* keyboard_createThread(List* list1, pthread_mutex_t *mutex, pthread_cond_t *condition){
+void* keyboard_createThread(List* list1, pthread_mutex_t *mutex, pthread_cond_t *s_condition){
     inputList = list1;
     keyMutex = mutex;
-    sendCondition = condition;
+    sendCondition = s_condition;
     pthread_create(&keyThread,NULL,keyboard_input,NULL);
     keyCancelInit(keyThread);
 }
