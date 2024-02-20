@@ -40,7 +40,9 @@ void* keyboard_input(){
             cancelPrint();
             cancelSend();
             cancelKeyboard();
-            exit(-1);
+           // printf("Hello this is keyboard\n");
+            break;
+            //exit(-1);
         }
     }
 }

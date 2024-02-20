@@ -116,9 +116,14 @@ int main(int argc, char**args){
     send_joinThread();
     print_joinThread();
 
+
+    printf("\n**********Program ENDED****************\n");
     close(socketDescriptor);
     pthread_mutex_destroy(&mutex_1);
     pthread_mutex_destroy(&mutex_2);
+    pthread_cond_destroy(&sendCondition);
+    pthread_cond_destroy(&printCondition);
     List_free(list1, NULL);
     List_free(list2, NULL);
+    return 0;
 }
