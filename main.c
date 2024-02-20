@@ -73,6 +73,7 @@ int main(int argc, char**args){
     send_joinThread();
     print_joinThread();
 
+    // clean up
     close(socketDescriptor);
     freeaddrinfo(serverInfo);
     pthread_mutex_destroy(&mutex_1);
