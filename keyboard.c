@@ -39,10 +39,10 @@ void* keyboard_input(){
     }
 }
 
-void* keyboard_createThread(List* list1, pthread_mutex_t *mutex, pthread_cond_t *s_condition){
+void* keyboard_createThread(List* list1, pthread_mutex_t *mutex, pthread_cond_t *condition){
     inputList = list1;
     keyMutex = mutex;
-    sendCondition = s_condition;
+    sendCondition = condition;
     pthread_create(&keyThread,NULL,keyboard_input,NULL);
     keyCancelInit(keyThread);
 }

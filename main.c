@@ -3,6 +3,7 @@
 #include "sendProcess.h"
 #include "print.h"
 #include "threadcancel.h"
+
 int main(int argc, char**args){
     if(argc!=4){
         printf("%d\n",argc);
@@ -68,12 +69,10 @@ int main(int argc, char**args){
 
     //Joining the threads 
     keyboard_joinThread();
-    receive_joinThread();
+    receive_joinThread(); 
     send_joinThread();
     print_joinThread();
 
-
-   
     close(socketDescriptor);
     freeaddrinfo(serverInfo);
     pthread_mutex_destroy(&mutex_1);
