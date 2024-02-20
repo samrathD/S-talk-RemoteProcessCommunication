@@ -53,8 +53,9 @@ void* send_input(void* arg) {
            // freeaddrinfo(serverInfo);
             break;
         }
-       // free(message);
+    //    free(message);
         message = NULL;
+        
     }
     printf("Freeing serverInfo\n");
     // freeaddrinfo(serverInfo);
