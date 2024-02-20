@@ -11,7 +11,7 @@ static pthread_t receiveThread;
 
 static int recvSocket;
 
-pthread_cond_t *printCondition; 
+pthread_cond_t *printCondition;
 
 //Pass port numbers
 void* receive_input(void* unused) {
@@ -47,7 +47,7 @@ void* receive_input(void* unused) {
             cancelSend();
             cancelPrint();
             cancelReceive();
-            exit(-1);
+            break;
         }
     }
 }
